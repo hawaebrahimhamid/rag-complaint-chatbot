@@ -223,5 +223,11 @@ data/processed/
 # Vector databases
 vector_store/
 
+# Keep deployment vector store files
+!vector_store/
+!vector_store/faiss.index
+!vector_store/metadata.csv
+
 # Large CSV files
 *.csv
+!vector_store/metadata.csv
