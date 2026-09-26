@@ -18,7 +18,7 @@ def test_ask_returns_fallback_when_no_results(mock_get_retriever):
     assert "do not have enough information" in answer
     assert results.empty
 
-    
+
 @patch("src.rag.pipeline.generate_answer")
 @patch("src.rag.pipeline.get_retriever")
 def test_ask_returns_answer_when_context_exists(
@@ -32,6 +32,9 @@ def test_ask_returns_answer_when_context_exists(
         {
             "text": [
                 "Customers reported problems with credit cards."
+            ],
+            "distance": [
+                0.5
             ]
         }
     )

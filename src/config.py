@@ -8,6 +8,7 @@ class AppConfig:
     GENERATOR_MODEL: str = "google/flan-t5-small"
 
     TOP_K: int = 3
+    RELEVANCE_THRESHOLD: float = 1.0
 
     MAX_NEW_TOKENS: int = 100
     MIN_NEW_TOKENS: int = 20

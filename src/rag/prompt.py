@@ -1,28 +1,17 @@
 PROMPT_TEMPLATE = """
+Answer the question using only the complaint information below.
 
-You are a financial analyst assistant for CrediTrust.
-
-
-Only answer using the complaint context below.
-
-If the context does not answer the question, reply exactly:
-
-"I do not have enough information from the provided complaint data."
-
-Do not use your own knowledge.
-
-Answer the user's question using only the provided complaint context.
-
-If the context does not contain enough information,
-say that you do not have enough information.
-
-
-Context:
+COMPLAINTS:
 {context}
 
-Question:
+QUESTION:
 {question}
 
-Answer:
+Write one short sentence answering the question.
+State only the main problem described in the complaints.
+Use simple, direct language.
+Do not copy the complaints word-for-word.
+Do not add information that is not in the complaints.
 
+ANSWER:
 """

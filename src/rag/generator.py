@@ -12,8 +12,9 @@ def generate_answer(prompt: str) -> str:
 
     response = generator(
         prompt,
-        max_length=AppConfig.MAX_NEW_TOKENS,
-        min_length=AppConfig.MIN_NEW_TOKENS,
+        max_new_tokens=AppConfig.MAX_NEW_TOKENS,
+        
+        repetition_penalty=1.2,
         do_sample=False
     )
 

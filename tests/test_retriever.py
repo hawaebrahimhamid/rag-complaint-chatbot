@@ -34,9 +34,9 @@ def test_search_returns_dataframe(
 ):
     mock_index = MagicMock()
     mock_index.search.return_value = (
-        None,
-        [[0]]
-    )
+    [[0.5]],
+    [[0]]
+)
 
     mock_read_index.return_value = mock_index
 

@@ -43,8 +43,9 @@ class Retriever:
 
 
         results = self.metadata.iloc[
-            indices[0]
-        ]
+             indices[0]
+        ].copy()
 
+        results["distance"] = distances[0]
 
         return results
