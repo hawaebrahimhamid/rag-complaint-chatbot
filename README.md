@@ -2,136 +2,122 @@
 
 [![Tests](https://github.com/hawaebrahimhamid/rag-complaint-chatbot/actions/workflows/tests.yml/badge.svg)](https://github.com/hawaebrahimhamid/rag-complaint-chatbot/actions)
 
-An AI-powered **Retrieval-Augmented Generation (RAG)** system that helps financial-service teams quickly understand customer complaints.
+An AI-powered **Retrieval-Augmented Generation (RAG)** system that helps financial-service teams analyze customer complaints and retrieve evidence-backed answers from the CFPB Consumer Complaint Database.
 
-The system retrieves relevant complaints from the CFPB dataset, generates an answer using **FLAN-T5**, and provides supporting complaint sources for transparency.
-
-## 🚀 Live Demo
+## Live Demo
 
 **Streamlit App:** https://creditrust-complaint-chatbot.streamlit.app/
 
-## 🎯 Problem
+## Overview
 
-Financial institutions receive large volumes of customer complaints. Manually reviewing these complaints makes it difficult to quickly identify recurring problems and understand what customers are experiencing.
+Financial institutions receive large volumes of customer complaints, making it difficult to quickly identify recurring issues.
 
-CrediTrust Complaint Assistant provides a conversational interface for querying complaint data and retrieving evidence-backed responses.
+CrediTrust provides a conversational interface that:
 
-## ✨ Key Features
+- Retrieves relevant complaint evidence using semantic search
+- Generates answers using FLAN-T5
+- Displays supporting complaint sources
+- Rejects out-of-domain questions when relevant evidence is unavailable
+- Validates generated answers and falls back to retrieved evidence when generation is unreliable
 
-* 🔎 **Semantic search** over customer complaints using FAISS
-* 🤖 **RAG-based question answering** with FLAN-T5
-* 📚 **Source transparency** — retrieved complaints are shown with answers
-* 🛡️ **Retrieval relevance filtering** to reduce unrelated results
-* ✅ **Answer-quality validation** to detect weak generated responses
-* 🧾 **Evidence-grounded fallback** when generation is unreliable
-* 🚫 **Out-of-domain rejection** when the complaint dataset cannot answer a question
-* 🧪 Automated testing with **pytest**
-* 🔄 Continuous testing with **GitHub Actions**
-* 📊 Streamlit dashboard for exploring complaint data
-
-## 🏗️ Architecture
+## Architecture
 
 ```text
 User Question
-      │
-      ▼
+      |
+      v
 Query Embedding
-      │
-      ▼
+      |
+      v
 FAISS Similarity Search
-      │
-      ▼
+      |
+      v
 Retrieval Relevance Check
-      │
-      ▼
+      |
+      v
 Relevant Complaint Evidence
-      │
-      ▼
+      |
+      v
 Prompt Construction
-      │
-      ▼
+      |
+      v
 FLAN-T5 Generation
-      │
-      ▼
+      |
+      v
 Answer Quality Validation
-      │
-      ├───────────────┐
-      │               │
-   Valid           Invalid
-      │               │
-      ▼               ▼
+      |
+      +----------------+
+      |                |
+    Valid            Invalid
+      |                |
+      v                v
 Generated       Evidence-Grounded
-Answer              Fallback
-      │               │
-      └───────┬───────┘
-              ▼
+Answer             Fallback
+      |                |
+      +-------+--------+
+              |
+              v
         Answer + Sources
 ```
 
-## 🧠 Technical Approach
+## RAG Pipeline
 
 ### Retrieval
 
-Customer complaint narratives are converted into vector embeddings using:
+Complaint narratives are converted into vector embeddings using:
 
-**`sentence-transformers/all-MiniLM-L6-v2`**
+`sentence-transformers/all-MiniLM-L6-v2`
 
-The embeddings are stored in a **FAISS IndexFlatL2** vector index. For each question, the system retrieves the most relevant complaint chunks.
+The embeddings are stored in a **FAISS IndexFlatL2** vector index. User questions are embedded and matched against complaint chunks to retrieve relevant evidence.
 
 ### Generation
 
-The retrieved complaint evidence is provided to:
+Retrieved complaint evidence is passed to:
 
-**`google/flan-t5-small`**
+`google/flan-t5-small`
 
-The model generates an answer based on the retrieved complaint context rather than relying only on its pretrained knowledge.
+The model generates responses using the retrieved context rather than relying only on pretrained knowledge.
 
-### Reliability Improvements
+### Reliability
 
-The project includes several safeguards beyond a basic RAG pipeline:
+The pipeline includes:
 
-* Retrieval relevance threshold
-* Answer-quality checks
-* Duplicate/low-quality evidence filtering
-* Evidence-grounded fallback responses
-* Out-of-domain question handling
-* Source display for explainability
+- Retrieval relevance filtering
+- Answer-quality validation
+- Low-quality evidence filtering
+- Evidence-grounded fallback responses
+- Out-of-domain question handling
+- Source display for transparency
 
-These improvements were added as part of the Week 12 production improvements.
+## Dataset
 
-## 📊 Dataset
+The system uses the **CFPB Consumer Complaint Database** and focuses on financial products including:
 
-The project uses the **Consumer Financial Protection Bureau (CFPB) Consumer Complaint Database**.
-
-The pipeline processes complaint narratives and focuses on financial product categories including:
-
-* Checking / Savings
-* Credit Cards
-* Money Transfers
-* Payday Loans
+- Checking / Savings
+- Credit Cards
+- Money Transfers
+- Payday Loans
 
 Complaint narratives are cleaned, chunked, embedded, and indexed for semantic retrieval.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Category      | Technology            |
-| ------------- | --------------------- |
-| Language      | Python                |
-| RAG           | Custom RAG pipeline   |
-| Embeddings    | Sentence Transformers |
-| Vector Search | FAISS                 |
-| Generation    | FLAN-T5               |
-| UI            | Streamlit             |
-| Testing       | Pytest                |
-| CI/CD         | GitHub Actions        |
-| Data          | Pandas                |
-| Deep Learning | PyTorch               |
+| Category        | Technology            |
+| --------------- | --------------------- |
+| Language        | Python                |
+| RAG             | Custom RAG Pipeline   |
+| Embeddings      | Sentence Transformers |
+| Vector Search   | FAISS                 |
+| Generation      | FLAN-T5               |
+| UI              | Streamlit             |
+| Data Processing | Pandas                |
+| Deep Learning   | PyTorch               |
+| Testing         | Pytest                |
+| CI              | GitHub Actions        |
 
-## 🧪 Testing
+## Testing
 
-The project includes automated tests covering retrieval and pipeline behavior.
-
-Current test status:
+The project includes automated tests for retrieval and pipeline behavior.
 
 ```text
 7 passed
@@ -139,104 +125,48 @@ Current test status:
 
 Tests are also executed automatically through GitHub Actions.
 
-## 📸 Interface
-
-The Streamlit application provides:
-
-* A conversational complaint search interface
-* Generated answers
-* Retrieved complaint sources
-* Complaint-category statistics
-* Visual exploration of the processed dataset
-
-## 📁 Project Structure
+## Project Structure
 
 ```text
 rag-complaint-chatbot/
-│
-├── app.py
-├── src/
-│   ├── config.py
-│   └── rag/
-│       ├── evidence.py
-│       ├── generator.py
-│       ├── pipeline.py
-│       ├── prompt.py
-│       ├── retriever.py
-│       └── test_retriever.py
-│
-├── tests/
-│   ├── test_pipeline.py
-│   └── test_retriever.py
-│
-├── notebooks/
-│   ├── task1_eda_preprocessing.ipynb
-│   └── task2_chunking_embedding.ipynb
-│
-├── vector_store/
-├── docs/
-├── requirements.txt
-└── README.md
+|
++-- app.py
++-- src/
+|   +-- config.py
+|   +-- rag/
+|       +-- evidence.py
+|       +-- generator.py
+|       +-- pipeline.py
+|       +-- prompt.py
+|       +-- retriever.py
+|       +-- test_retriever.py
+|
++-- tests/
+|   +-- test_pipeline.py
+|   +-- test_retriever.py
+|
++-- notebooks/
++-- vector_store/
++-- docs/
++-- requirements.txt
++-- README.md
 ```
 
-## 🚀 Run Locally
+## Engineering Focus
 
-### 1. Clone the repository
+This project goes beyond a basic RAG implementation by adding reliability mechanisms around retrieval and generation.
 
-```bash
-git clone https://github.com/hawaebrahimhamid/rag-complaint-chatbot.git
-cd rag-complaint-chatbot
-```
+The pipeline separates:
 
-### 2. Create and activate a virtual environment
+**Retrieval -> Evidence Validation -> Generation -> Answer Validation -> Fallback**
 
-```bash
-python -m venv venv
-```
+This helps reduce unsupported or low-quality responses and makes the system more transparent by showing the complaint evidence used for each answer.
 
-Windows:
+## Current Limitation
 
-```powershell
-.\venv\Scripts\Activate.ps1
-```
+The application currently uses **FLAN-T5-small** because of CPU and hardware constraints. While the RAG pipeline and reliability checks are implemented, generated responses can occasionally be incomplete. The system therefore prioritizes retrieved evidence and fallback behavior when generation quality is insufficient.
 
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Run the application
-
-```bash
-streamlit run app.py
-```
-
-The application will open in your browser.
-
-### 5. Run tests
-
-```bash
-pytest -q
-```
-
-## ⚠️ Limitations
-
-* The current generator is **FLAN-T5-small**, selected with CPU/hardware constraints in mind.
-* Complaint narratives contain noisy and incomplete text.
-* Generated responses can occasionally be incomplete, which is why evidence-based fallback and answer-quality checks are included.
-* The system is designed for complaint-data exploration rather than general-purpose question answering.
-
-## 🔮 Future Improvements
-
-* Upgrade to a larger instruction-tuned generation model
-* Improve retrieval ranking with reranking
-* Add multilingual support
-* Add conversation history
-* Add authentication and user management
-* Improve evaluation with a larger set of RAG quality metrics
-
-## 👩‍💻 Author
+## Author
 
 **Hawa Ebrahim Hamid**
 
@@ -244,4 +174,4 @@ AI Engineer | Generative AI, RAG & Full-Stack Development
 
 GitHub: https://github.com/hawaebrahimhamid
 
-LinkedIn: https://www.linkedin.com/in/hawa-ebrahim-hamid/
+LinkedIn: https://www.linkedin.com/in/ebrahim-hamid/
